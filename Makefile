@@ -20,5 +20,5 @@ $(prom): $(OBJ)
 	$(CC) -g -c $< -o $@
 
 clean:
-	@rm -rf $(OBJ) $(prom).deb
+	@rm -rf $(OBJ)
 
