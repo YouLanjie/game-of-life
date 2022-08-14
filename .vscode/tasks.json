@@ -6,10 +6,10 @@
                         "command": "/usr/bin/gcc",
                         "args": [
                                 "-g",
-                                "${fileDirname}/../include/tools.c",
-                                "${fileDirname}/main.c",
-                                "${fileDirname}/play.c",
-                                "${fileDirname}/running.c",
+                                "-Wall",
+                                "${fileDirname}/../src/main.c",
+                                "${fileDirname}/../src/play.c",
+                                "${fileDirname}/../lib/libtools.a",
                                 "-o",
                                 "${fileDirname}/../bin/main"
                         ],
