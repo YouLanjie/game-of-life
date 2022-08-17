@@ -16,6 +16,7 @@ int play() {
 	while (input != 'q' && input != 'Q' && input != 0x1B && input != '0') {
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
 		while (Lock);
+		Clear2
 		printBoard();
 		input = getch();
 		switch (input) {
@@ -288,6 +289,7 @@ void running() {
 	int count = 0;
 
 	Lock = 1;
+	Clear
 	printBoard();
 	if (states == 1 || states == 4) {
 		Lock = 0;

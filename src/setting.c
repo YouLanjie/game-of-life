@@ -1,9 +1,8 @@
 #include "../include/head.h"
 
 void settings() {
-	menuData data;
+	menuData data = menuDataInit();
 
-	menuDataInit(&data);
 	data.title = "设置";
 	data.cfg   = 3;
 	data.addText(&data, "秒数", "微秒数", "快速粘贴", " ", "调试选项", "显示调试信息", "显示细胞状态值", "更多按键", NULL);

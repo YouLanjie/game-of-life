@@ -10,9 +10,8 @@ int input = '1';
 int cfg[] = {1, 0, 0, 0};
 
 int main(/*int argc, char * argv[]*/) {
-	menuData data;
+	menuData data = menuDataInit();
 
-	menuDataInit(&data);
 	data.title = "生命游戏";
 	data.addText(&data, "1.开始游戏", "2.游戏设置", "3.游戏帮助", "4.退出游戏", NULL);
 
