@@ -9,7 +9,10 @@
                                 "-Wall",
                                 "${fileDirname}/../src/main.c",
                                 "${fileDirname}/../src/play.c",
+                                "${fileDirname}/../src/setting.c",
+                                "${fileDirname}/../src/help.c",
                                 "${fileDirname}/../lib/libtools.a",
+                                "-lncurses",
                                 "-o",
                                 "${fileDirname}/../bin/main"
                         ],

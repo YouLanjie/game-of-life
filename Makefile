@@ -14,7 +14,7 @@ all: game-of-life
 $(prom): $(OBJ)
 	@rm -rf $(BIN)
 	@mkdir bin
-	$(CC) $(OBJ) -g -L lib -ltools -o $(BIN)/main
+	$(CC) $(OBJ) -g -L lib -ltools -lncurses -o $(BIN)/main
 
 %.o: %.c $(incl)
 	$(CC) -g -c $< -o $@

@@ -1,4 +1,5 @@
 #include "../include/head.h"
+#include <curses.h>
 
 short int states = 1;
 char board[1024][1024];
@@ -22,13 +23,21 @@ int main(/*int argc, char * argv[]*/) {
 	tick.it_value.tv_sec = 0;
 	tick.it_value.tv_usec = 50000;
 
+	init_pair(6, COLOR_WHITE, COLOR_RED);
+	init_pair(7, COLOR_RED, COLOR_BLUE);
+	init_pair(8, COLOR_GREEN, COLOR_BLUE);
+	init_pair(9, COLOR_YELLOW, COLOR_BLUE);
+	init_pair(10, COLOR_BLUE, COLOR_BLUE);
+
 	signal(SIGALRM, running);
+	initscr();
+	cbreak();
+	noecho();
 	for (int i = 0; i < 200; i++) {
 		for (int i2 = 0; i2 < 200; i2++) {
 			board[i][i2] = 1;
 		}
 	}
-	printf("\033[?25l");
 	while(input != '0') {
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
 		input = data.menuShow(&data);
@@ -46,12 +55,12 @@ int main(/*int argc, char * argv[]*/) {
 				break;
 			case '0':
 			case '4':
-				printf("\033[?25h");
+				endwin();
 				return 0;
 				break;
 		}
 	}
-	printf("\033[?25h");
+	endwin();
 	return 0;
 }
 

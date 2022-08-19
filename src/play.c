@@ -1,4 +1,5 @@
 #include "../include/head.h"
+#include <curses.h>
 
 static void printBoard();
 
@@ -338,47 +339,107 @@ void running() {
 
 static void printBoard() {
 	int i = 0;
-	printf("\033[2;44m");
-	Clear
-	printf("\033[0;1;41m");
+	attron(COLOR_PAIR(1));
+	for (int i = 0; i < LINES; i++) {
+		for (int i2 = 0; i2 < COLS; i2++) {
+			mvaddch(i, i2, ' ');
+		}
+	}
+	attroff(COLOR_PAIR(1));
+	attron(COLOR_PAIR(6));
 	for (i = 0; i < MaxY; i++) {
 		for (int i2 = 0; i2 < MaxX; i2++) {
 			if (!cfg[2]) {
 				if (board[i][i2] == 2) {
-					printf("\033[%d;%dH  ", i + 1, (i2 + 1) * 2 - 1);
+					mvaddstr(i, (i2 + 1) * 2 - 2, "  ");
 				}
 				else if (board[i][i2] != 1) {
-					printf("\033[%d;%dH##", i + 1, (i2 + 1) * 2 - 1);
+					mvaddstr(i, (i2 + 1) * 2 - 2, "##");
 				}
 			}
 			else {
 				if (board[i][i2] == 2) {
-					printf("\033[%d;%dH\033[0;1;41m%2d", i + 1, (i2 + 1) * 2 - 1, board[i][i2]);
+					attroff(COLOR_PAIR(1));
+					attron(COLOR_PAIR(6));
+					move(i, (i2 + 1) * 2 - 2);
+					printw("%2d", board[i][i2]);
+					attroff(COLOR_PAIR(6));
+					attron(COLOR_PAIR(1));
 				}
 				else {
 					if (board[i][i2] < 0 || board[i][i2] > 9) {
-						printf("\033[%d;%dH\033[0;2;44m%2d", i + 1, (i2 + 1) * 2 - 1, board[i][i2]);
+						move(i, (i2 + 1) * 2 - 2);
+						printw("%2d", board[i][i2]);
 					}
 					else {
-						printf("\033[%d;%dH\033[0;2;44m%2d", i + 1, (i2 + 1) * 2 - 1, board[i][i2]);
+						move(i, (i2 + 1) * 2 - 2);
+						printw("%2d", board[i][i2]);
 
 					}
 				}
 			}
 		}
 	}
-	printf("\033[%d;1H\033[0;1;33;44m运行状态(Run States)：\033[3%dm%02d", i + 1, states, states);
-	if (cfg[1]) {
-		printf("  \033[0;1;33;44m输入字符(input char)：\033[32m%2c  \033[0;1;33;44mX：\033[32m%3d  \033[0;1;33;44mY：\033[32m%3d", input, x, y);
+	attroff(COLOR_PAIR(6));
+	attron(COLOR_PAIR(9));
+	attron(A_BOLD);
+	mvaddstr(LINES - 1, 0, "运行状态(Run States)：");
+	attroff(COLOR_PAIR(9));
+	switch (states) {
+		case 1:
+			attron(COLOR_PAIR(7));
+			printw("%02d", states);
+			attroff(COLOR_PAIR(7));
+			break;
+		case 2:
+			attron(COLOR_PAIR(8));
+			printw("%02d", states);
+			attroff(COLOR_PAIR(8));
+			break;
+		case 3:
+			attron(COLOR_PAIR(9));
+			printw("%02d", states);
+			attroff(COLOR_PAIR(9));
+			break;
+		case 4:
+			attron(COLOR_PAIR(10));
+			printw("%02d", states);
+			attroff(COLOR_PAIR(10));
+			break;
 	}
-	printf("\033[0m\033[%d;%dH", y, x * 2 - 1);
+	attron(COLOR_PAIR(9));
+	if (cfg[1]) {
+		printw("  输入字符(input char)：");
+		attroff(COLOR_PAIR(9));
+		attron(COLOR_PAIR(8));
+		printw("%2c", input);
+		attroff(COLOR_PAIR(8));
+		attron(COLOR_PAIR(9));
+		printw("  X：");
+		attroff(COLOR_PAIR(9));
+		attron(COLOR_PAIR(8));
+		printw("%3d", x);
+		attroff(COLOR_PAIR(8));
+		attron(COLOR_PAIR(9));
+		printw("  Y：");
+		attroff(COLOR_PAIR(9));
+		attron(COLOR_PAIR(8));
+		printw("%3d", y);
+		attroff(COLOR_PAIR(8));
+	}
+	move(y - 1, x * 2 - 2);
 	if (board[y - 1][x - 1] != 1) {
-		printf("\033[1;37;41m><\033[0m");
+		attron(COLOR_PAIR(6));
+		printw("><");
+		attroff(COLOR_PAIR(6));
 	}
 	else {
-		printf("\033[1;37;44m><\033[0m");
+		attron(COLOR_PAIR(1));
+		printw("><");
+		attroff(COLOR_PAIR(1));
 	}
-	kbhitGetchar();
+	attroff(A_BOLD);
+	refresh();
 	return;
 }
 

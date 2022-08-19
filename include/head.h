@@ -1,5 +1,6 @@
 #include "tools.h"                         //头文件
 #include <sys/time.h>
+#include <curses.h>
 
 #define MaxX (size.ws_col-1)/4*2      /* x轴 */
 #define MaxY size.ws_row-1            /* y轴 */
