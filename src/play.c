@@ -346,7 +346,12 @@ static void printBoard() {
 		}
 	}
 	attroff(COLOR_PAIR(1));
-	attron(COLOR_PAIR(6));
+	if (!cfg[2]) {
+		attron(COLOR_PAIR(6));
+	}
+	else {
+		attron(COLOR_PAIR(1));
+	}
 	for (i = 0; i < MaxY; i++) {
 		for (int i2 = 0; i2 < MaxX; i2++) {
 			if (!cfg[2]) {
@@ -380,7 +385,12 @@ static void printBoard() {
 			}
 		}
 	}
-	attroff(COLOR_PAIR(6));
+	if (!cfg[2]) {
+		attroff(COLOR_PAIR(6));
+	}
+	else {
+		attroff(COLOR_PAIR(1));
+	}
 	attron(COLOR_PAIR(9));
 	attron(A_BOLD);
 	mvaddstr(LINES - 1, 0, "运行状态(Run States)：");
