@@ -12,10 +12,12 @@ int cfg[] = { 1, 0, 0, 0 };
 
 int main( /*int argc, char * argv[] */ )
 {
-	menuData data = menuDataInit();
+	ctools_menu_t * data = NULL;
 
-	data.title = "生命游戏";
-	data.addText(&data, "1.开始游戏", "2.游戏设置",
+	ctools_menu_Init();
+	ctools_menu_t_init(&data);
+	data->title = "生命游戏";
+	ctools_menu_AddText(data, "1.开始游戏", "2.游戏设置",
 		     "3.游戏帮助", "4.退出游戏", NULL);
 
 	/* 定时间隔 */
@@ -42,7 +44,7 @@ int main( /*int argc, char * argv[] */ )
 	}
 	while (input != '0') {
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-		input = data.menuShow(&data);
+		input = ctools_menu_Show(data);
 		switch (input) {
 		case '1':
 			play();
