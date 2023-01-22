@@ -11,13 +11,13 @@ void settings()
 		     "调试选项", "显示调试信息",
 		     "显示细胞状态值", "更多按键", NULL);
 	ctools_menu_AddTextData(data, 0, "%s %s %s N %s %s %s %s",
-			 "%z设置游戏更新间隔的秒数%z",
-			 "%z设置游戏更新间隔的微秒数%z",
-			 "%z快速粘贴一些游戏内内置的装置%z",
-			 "%z开启调试或说是测试功能%z",
-			 "%z显示更多（调试）信息%z",
-			 "%z显示游戏细胞的真实数字%z",
-			 "%z开启更多的编辑按键%z");
+			 "设置游戏更新间隔的秒数",
+			 "设置游戏更新间隔的微秒数",
+			 "快速粘贴一些游戏内内置的装置",
+			 "开启调试或说是测试功能",
+			 "显示更多（调试）信息",
+			 "显示游戏细胞的真实数字",
+			 "开启更多的编辑按键");
 	ctools_menu_AddTextData(data, 1, "%s %s %s N N  %s %s %s", 1, 1, 2, 2, 2, 2);
 	ctools_menu_AddTextData(data, 2, "%s %s %s N N  %s %s %s",
 			 &tick.it_interval.tv_sec, &tick.it_interval.tv_usec,

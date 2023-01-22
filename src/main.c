@@ -1,5 +1,4 @@
 #include "../include/head.h"
-#include <curses.h>
 
 short int states = 1;
 char board[1024][1024];
@@ -10,7 +9,7 @@ struct itimerval tick;
 int input = '1';
 int cfg[] = { 1, 0, 0, 0 };
 
-int main( /*int argc, char * argv[] */ )
+int main()
 {
 	ctools_menu_t * data = NULL;
 
