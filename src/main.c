@@ -14,6 +14,9 @@ int main()
 	ctools_menu_t * data = NULL;
 
 	ctools_menu_Init();
+
+	init_pair(1, COLOR_WHITE, COLOR_BLUE);
+
 	ctools_menu_t_init(&data);
 	data->title = "生命游戏";
 	ctools_menu_AddText(data, "1.开始游戏", "2.游戏设置",
