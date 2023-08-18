@@ -2,12 +2,12 @@
 
 void help()
 {
-	ctools_menu_t * help = NULL;
+	struct ctools_menu_t * help = NULL;
 
-	ctools_menu_t_init(&help);
-	help->title = "游戏帮助";
-	help->cfg = 2;
-	ctools_menu_AddText(help,
+	CT_MENU.data_init(&help);
+	CT_MENU.set_title(help, "游戏帮助");
+	CT_MENU.set_type(help, "help");
+	CT_MENU.set_text(help,
 		     "关于生命游戏\n",
 		     "生命游戏是英国数学家 约翰 何顿 康威 在1970年发明的细胞自动机，每个细胞有两种状态--存活或者死亡，每个细胞只与以其自身为中心的细胞产生互动。这个游戏也叫康威生命游戏、细胞自动机、元胞自动机等。",
 
@@ -32,5 +32,5 @@ void help()
 		     "本程序一样也在Github上开源了（我都觉得这是废话）：",
 		     "https://github.com/youlanjie/game-of-life", NULL);
 
-	ctools_menu_Show(help);
+	CT_MENU.show(help);
 }

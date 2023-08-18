@@ -2,15 +2,15 @@
 
 void settings()
 {
-	ctools_menu_t * data = NULL;
+	struct ctools_menu_t * data = NULL;
 
-	ctools_menu_t_init(&data);
-	data->title = "设置";
-	data->cfg = 3;
-	ctools_menu_AddText(data, "秒数", "微秒数", "快速粘贴", " ",
+	CT_MENU.data_init(&data);
+	CT_MENU.set_title(data, "设置");
+	CT_MENU.set_type(data, "setting");
+	CT_MENU.set_text(data, "秒数", "微秒数", "快速粘贴", " ",
 		     "调试选项", "显示调试信息",
 		     "显示细胞状态值", "更多按键", NULL);
-	ctools_menu_AddTextData(data, 0, "%s %s %s N %s %s %s %s",
+	CT_MENU.set_text_data(data, "describe", "%s %s %s N %s %s %s %s",
 			 "设置游戏更新间隔的秒数",
 			 "设置游戏更新间隔的微秒数",
 			 "快速粘贴一些游戏内内置的装置",
@@ -18,12 +18,12 @@ void settings()
 			 "显示更多（调试）信息",
 			 "显示游戏细胞的真实数字",
 			 "开启更多的编辑按键");
-	ctools_menu_AddTextData(data, 1, "%s %s %s N N  %s %s %s", 1, 1, 2, 2, 2, 2);
-	ctools_menu_AddTextData(data, 2, "%s %s %s N N  %s %s %s",
+	CT_MENU.set_text_data(data, "type", "%s %s %s N N  %s %s %s", 1, 1, 2, 2, 2, 2);
+	CT_MENU.set_text_data(data, "var", "%s %s %s N N  %s %s %s",
 			 &tick.it_interval.tv_sec, &tick.it_interval.tv_usec,
 			 &cfg[0], &cfg[1], &cfg[2], &cfg[3]);
-	ctools_menu_AddTextData(data, 3, "%s %s", 1, 5000);
+	CT_MENU.set_text_data(data, "foot", "%s %s", 1, 5000);
 
-	ctools_menu_Show(data);
+	CT_MENU.show(data);
 	return;
 }

@@ -19,7 +19,7 @@ int play()
 	}
 	while (input != 'q' && input != 'Q' && input != 0x1B && input != '0') {
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-		Clear;
+		clear();
 		printBoard();
 		input = getch();
 		switch (input) {
@@ -121,7 +121,7 @@ int play()
 			break;
 		case 'c':	/* 清屏，可用作恢复正常显示使用 */
 		case 'C':
-			Clear;
+			clear();
 			printBoard();
 			break;
 		case ' ':	/* 更改细胞状态 */
@@ -293,7 +293,7 @@ void running()
 	int count = 0;
 
 	LOCK;
-	Clear;
+	clear();
 	printBoard();
 	if (states == 1 || states == 4) {
 		UNLOCK;

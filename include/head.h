@@ -10,6 +10,8 @@ void running();
 void help();
 void settings();
 
+extern const ctools_menu CT_MENU;
+
 extern char board[1024][1024];
 extern short int states;
 extern short int x, y;

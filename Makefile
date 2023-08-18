@@ -12,12 +12,11 @@ RESDIR = ./res
 all: game-of-life
 
 $(prom): $(OBJ)
-	@if [ ! -d "$(BIN)" ]; then mkdir $(BIN); fi
-	$(CC) $(OBJ) -g -L lib -ltools -lncurses -o $(BIN)/main
+	$(CC) $(OBJ) -g -lncurses -o $(BIN)/main
 
 %.o: %.c $(incl)
 	$(CC) -g -c $< -o $@
 
 clean:
-	@rm -rf $(BIN) $(OBJ)
+	@rm -rf $(OBJ)
 

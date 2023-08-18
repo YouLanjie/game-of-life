@@ -11,15 +11,15 @@ int cfg[] = { 1, 0, 0, 0 };
 
 int main()
 {
-	ctools_menu_t * data = NULL;
+	struct ctools_menu_t * data = NULL;
 
-	ctools_menu_Init();
+	CT_MENU.ncurses_init();
 
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);
 
-	ctools_menu_t_init(&data);
-	data->title = "生命游戏";
-	ctools_menu_AddText(data, "1.开始游戏", "2.游戏设置",
+	CT_MENU.data_init(&data);
+	CT_MENU.set_title(data, "生命游戏");
+	CT_MENU.set_text(data, "1.开始游戏", "2.游戏设置",
 		     "3.游戏帮助", "4.退出游戏", NULL);
 
 	/* 定时间隔 */
@@ -46,21 +46,21 @@ int main()
 	}
 	while (input != '0') {
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-		input = ctools_menu_Show(data);
+		input = CT_MENU.show(data);
 		switch (input) {
-		case '1':
+		case 1:
 			play();
 			break;
-		case '2':
+		case 2:
 		case 'o':
 		case 'O':
 			settings();
 			break;
-		case '3':
+		case 3:
 			help();
 			break;
-		case '0':
-		case '4':
+		case 0:
+		case 4:
 			endwin();
 			return 0;
 			break;
