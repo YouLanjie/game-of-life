@@ -7,61 +7,34 @@ static void printBoard();
 
 pthread_mutex_t MUTEX;
 
+int farme = 0;
+int flag_exit = 1;
+
 int play()
 {
-	alarm(0);
+	pthread_t pid;
 	states = 1;
 
-	if (setitimer(ITIMER_REAL, &tick, NULL)) {
-		perror("Error");
-		getchar();
-		return -1;
-	}
+	flag_exit = 1;
+	pthread_create(&pid, NULL, running, NULL);
 	while (input != 'q' && input != 'Q' && input != 0x1B && input != '0') {
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
 		clear();
 		printBoard();
-		input = getch();
+		input = 0;
+		if (kbhit())
+			input = _getch();
+		usleep(cfg[4]*TPS);
+		farme++;
+		input = (input >= 'a' && input <= 'z') ? input - 32 : input;
+		if (input == 0x1B && kbhit()) {
+			int table[256] = {['A'] = 'W', ['B'] = 'S', ['C'] = 'D', ['D'] = 'A'};
+			getchar();
+			input = getchar();
+			input = table[input];
+		}
 		switch (input) {
-		case 0x1B:
-			if (ctools_kbhit() != 0) {
-				getchar();
-				input = getch();
-				switch (input) {
-				case 'A':
-					if (y <= 1) {
-						y = MaxY;
-					} else {
-						y--;
-					}
-					break;
-				case 'B':
-					if (y >= MaxY) {
-						y = 1;
-					} else {
-						y++;
-					}
-					break;
-				case 'C':
-					if (x >= MaxX) {
-						x = 1;
-					} else {
-						x++;
-					}
-					break;
-				case 'D':
-					if (x <= 1) {
-						x = MaxX;
-					} else {
-						x--;
-					}
-					break;
-				}
-			}
-			break;
-		case 'w':	/* 上 */
-		case 'W':
-		case 'k':
+		case 'W':	/* 上 */
 		case 'K':
 			if (y <= 1) {
 				y = MaxY;
@@ -69,9 +42,7 @@ int play()
 				y--;
 			}
 			break;
-		case 's':	/* 下 */
-		case 'S':
-		case 'j':
+		case 'S':	/* 下 */
 		case 'J':
 			if (y >= MaxY) {
 				y = 1;
@@ -79,9 +50,7 @@ int play()
 				y++;
 			}
 			break;
-		case 'd':	/* 右 */
-		case 'D':
-		case 'l':
+		case 'D':	/* 右 */
 		case 'L':
 			if (x >= MaxX) {
 				x = 1;
@@ -89,9 +58,7 @@ int play()
 				x++;
 			}
 			break;
-		case 'a':	/* 左 */
-		case 'A':
-		case 'h':
+		case 'A':	/* 左 */
 		case 'H':
 			if (x <= 1) {
 				x = MaxX;
@@ -99,28 +66,23 @@ int play()
 				x--;
 			}
 			break;
-		case 'g':	/* 切换状态：1关 2开（3单步 4上锁，对象操作中） */
-		case 'G':
-		case 'p':
+		case 'G':	/* 切换状态：1关 2开（3单步 4上锁，对象操作中） */
 		case 'P':
 			if (states == 1 || states == 2) {
 				states = 3 - states;
 			}
 			break;
-		case 'n':	/* 单步调用 */
-		case 'N':	/* 单步执行完毕自动回到关闭状态 */
+		case 'N':	/* 单步调用,单步执行完毕自动回到关闭状态 */
 			states = 3;
 			break;
-		case 'r':	/* 重置整个棋盘 */
-		case 'R':
+		case 'R':	/* 重置整个棋盘 */
 			for (int i = 0; i < 200; i++) {
 				for (int i2 = 0; i2 < 200; i2++) {
 					board[i][i2] = 1;
 				}
 			}
 			break;
-		case 'c':	/* 清屏，可用作恢复正常显示使用 */
-		case 'C':
+		case 'C':	/* 清屏，可用作恢复正常显示使用 */
 			clear();
 			printBoard();
 			break;
@@ -138,16 +100,13 @@ int play()
 				}
 			}
 			break;
-		case 'o':	/* 设置 */
-		case 'O':
+		case 'O':	/* 设置 */
 			states = 1;
-			alarm(0);
+			flag_exit = 0;
+			usleep(TPS);
 			settings();
-			if (setitimer(ITIMER_REAL, &tick, NULL)) {
-				perror("Error");
-				getch();
-				return -1;
-			}
+			flag_exit = 1;
+			pthread_create(&pid, NULL, running, NULL);
 			break;
 		case '1':	/* 快速粘贴：滑翔者 */
 			if (cfg[0] && y >= 1 && y <= MaxY - 3 && x >= 1
@@ -284,17 +243,18 @@ int play()
 		}
 	}
 	alarm(0);
+	flag_exit = 0;
 	return 0;
 }
 
-void running()
+void _running()
 {
 	char board2[1024][1024];
 	int count = 0;
 
 	LOCK;
-	clear();
-	printBoard();
+	/*clear();*/
+	/*printBoard();*/
 	if (states == 1 || states == 4) {
 		UNLOCK;
 		return;
@@ -335,11 +295,19 @@ void running()
 			board[i][i2] = board2[i][i2];
 		}
 	}
-	printBoard();
+	/*printBoard();*/
 	if (states == 3) {
 		states = 1;
 	}
 	UNLOCK;
+}
+
+void *running() {
+	while ( flag_exit ) {
+		_running();
+		usleep(daley);
+	}
+	return NULL;
 }
 
 static void printBoard()
@@ -396,28 +364,14 @@ static void printBoard()
 	attron(A_BOLD);
 	mvaddstr(LINES - 1, 0, "运行状态(Run States)：");
 	attroff(COLOR_PAIR(9));
-	switch (states) {
-	case 1:
-		attron(COLOR_PAIR(7));
-		printw("%02d", states);
-		attroff(COLOR_PAIR(7));
-		break;
-	case 2:
-		attron(COLOR_PAIR(8));
-		printw("%02d", states);
-		attroff(COLOR_PAIR(8));
-		break;
-	case 3:
-		attron(COLOR_PAIR(9));
-		printw("%02d", states);
-		attroff(COLOR_PAIR(9));
-		break;
-	case 4:
-		attron(COLOR_PAIR(10));
-		printw("%02d", states);
-		attroff(COLOR_PAIR(10));
-		break;
+
+	if (states > 0 && states < 5) {
+		attron(COLOR_PAIR(6+states));
+		char *tag[4] = {"暂停", "运行", "分步运行", "粘贴预设"};
+		printw("%s", tag[states - 1]);
+		attroff(COLOR_PAIR(6+states));
 	}
+
 	attron(COLOR_PAIR(9));
 	if (cfg[1]) {
 		printw("  输入字符(input char)：");
@@ -437,6 +391,7 @@ static void printBoard()
 		attron(COLOR_PAIR(8));
 		printw("%3d", y);
 		attroff(COLOR_PAIR(8));
+		printw("  farme:%3d", farme);
 	}
 	move(y - 1, x * 2 - 2);
 	if (board[y - 1][x - 1] != 1) {
@@ -452,3 +407,4 @@ static void printBoard()
 	refresh();
 	return;
 }
+

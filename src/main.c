@@ -5,29 +5,23 @@ char board[1024][1024];
 short int x = 1, y = 1;
 struct winsize size;		/* 记录窗口大小 */
 
-struct itimerval tick;
+int daley = 30000;
 int input = '1';
-int cfg[] = { 1, 0, 0, 0 };
+int cfg[] = { 1, 0, 0, 0, 1 , 5000};
 
 int main()
 {
-	struct ctools_menu_t * data = NULL;
+	cmenu data = cmenu_create();
 
-	CT_MENU.ncurses_init();
+	ctools_ncurses_init();
 
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);
 
-	CT_MENU.data_init(&data);
-	CT_MENU.set_title(data, "生命游戏");
-	CT_MENU.set_text(data, "1.开始游戏", "2.游戏设置",
-		     "3.游戏帮助", "4.退出游戏", NULL);
-
-	/* 定时间隔 */
-	tick.it_interval.tv_sec = 0;
-	tick.it_interval.tv_usec = 150000;
-	/* 延迟启动 */
-	tick.it_value.tv_sec = 0;
-	tick.it_value.tv_usec = 50000;
+	cmenu_set_title(data, "生命游戏");
+	cmenu_add_text(data, 0, "1.开始游戏", NULL, NULL, NULL, NULL, 0, 0, 0);
+	cmenu_add_text(data, 0, "2.游戏设置", NULL, NULL, NULL, NULL, 0, 0, 0);
+	cmenu_add_text(data, 0, "3.游戏帮助", NULL, NULL, NULL, NULL, 0, 0, 0);
+	cmenu_add_text(data, 0, "4.退出游戏", NULL, NULL, NULL, NULL, 0, 0, 0);
 
 	init_pair(6, COLOR_WHITE, COLOR_RED);
 	init_pair(7, COLOR_RED, COLOR_BLUE);
@@ -35,7 +29,7 @@ int main()
 	init_pair(9, COLOR_YELLOW, COLOR_BLUE);
 	init_pair(10, COLOR_BLUE, COLOR_BLUE);
 
-	signal(SIGALRM, running);
+	/*signal(SIGALRM, running);*/
 	initscr();
 	cbreak();
 	noecho();
@@ -46,7 +40,7 @@ int main()
 	}
 	while (input != '0') {
 		ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-		input = CT_MENU.show(data);
+		input = cmenu_show(data);
 		switch (input) {
 		case 1:
 			play();
